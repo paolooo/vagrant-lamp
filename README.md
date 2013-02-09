@@ -1,9 +1,15 @@
-1) Update submodule
+Vagrant LAMP
+============
+by Nino Paolo Amarillento
 
-   $ git submodule update --init --recursive
+Installation
+------------
+- Download repo
+  `git clone https://github.com/paolooo/vagrant-lamp.git lamp`
+  `cd lamp`
 
-2) Run vagrant
-  
-   $ vagrant up
+- Update submodule
+   `git submodule update --init --recursive`
 
-
+- Run vagrant  
+   `vagrant up`
