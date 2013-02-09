@@ -59,7 +59,7 @@ Vagrant::Config.run do |config|
     puppet.facter = {
       "fqdn"      => "dev.lamp.mysql",
       "hostname"  => "www",
-      "docroot"   => "/vagrant/www"
+      "docroot"   => "/vagrant/www",
       "host"      => 'localhost',
       "username"  => 'root',
       "password"  => '123',
