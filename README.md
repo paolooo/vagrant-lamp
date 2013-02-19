@@ -43,7 +43,9 @@ Vagrant Commands
 * `vagrant status`
 
 
-Thanks to
----------
+Credit
+------
+* [VagrantUp](http://vagrantup.com/)
+* [VirtualBox](http://virtualbox.com)
 * [PuppetLabs](https://github.com/puppetlabs)
 * [Alessandro Franceschi](https://github.com/example42/)
