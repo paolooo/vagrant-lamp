@@ -7,7 +7,7 @@ Installation
 ------------
 - Download [Vagrant](http://downloads.vagrantup.com/)
 - Clone vagrant-lamp git repo   
-  `git clone https://github.com/paolooo/vagrant-lamp.git lamp`  
+  `git clone git://github.com/paolooo/vagrant-lamp.git lamp`  
   `cd lamp`
 - Update submodule    
    `git submodule update --init --recursive`
@@ -43,4 +43,7 @@ Vagrant Commands
 * `vagrant status`
 
 
-
+Thanks to
+---------
+* [PuppetLabs](https://github.com/puppetlabs)
+* [Alessandro Franceschi](https://github.com/example42/)
