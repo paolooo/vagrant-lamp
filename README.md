@@ -6,7 +6,8 @@ by Nino Paolo Amarillento
 
 Installation
 ------------
-- Download [Vagrant](http://downloads.vagrantup.com/)
+- Download [Vagrant](http://downloads.vagrantup.com/)   
+- Download [Virtualbox](https://www.virtualbox.org/wiki/Downloads)    
 - Clone vagrant-lamp git repo   
   `git clone git://github.com/paolooo/vagrant-lamp.git lamp`  
   `cd lamp`
