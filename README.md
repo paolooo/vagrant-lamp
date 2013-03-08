@@ -1,4 +1,5 @@
 Vagrant LAMP
+
 ============
 by Nino Paolo Amarillento
 
@@ -13,7 +14,25 @@ Installation
    `git submodule update --init --recursive`
 - Run vagrant   
    `vagrant up`
-
+- After installation is done, and encountered missing packages. You should run
+   `vagrant provision`
+- Log to Vagrant Virtualbox Lamp Environment
+  host: `localhost`   
+  port: `2222`    
+  username: `vagrant`   
+  password: `vagrant`
+- Check packages
+  `$ php -v`    
+  `$ mysql --version`   
+  `$ sqlite -version`   
+  `$ psql --version`    
+  `$ phpunit --version`   
+  `$ composer --version`    
+  `$ ruby --version`    
+  `$ gem --version`   
+  `$ node --version`    
+  `$ npm --version`   
+  
 
 Usage
 -----

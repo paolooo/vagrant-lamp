@@ -67,7 +67,7 @@ Vagrant::Config.run do |config|
       "db_location" => "/vagrant/db/development.sqlite"
     }
     puppet.manifests_path = "puppet/manifests"
-    puppet.module_path = "puppet/modules"
+    puppet.module_path = ["puppet/modules", "extras/modules"]
     puppet.manifest_file  = "init.pp"
   end
 
