@@ -17,7 +17,7 @@ Installation
    `vagrant up`
 - After installation is done, and encountered missing packages. You should run
    `vagrant provision`
-- Log to Vagrant Virtualbox Lamp Environment
+- Log to Vagrant Virtualbox Lamp Environment    
   host: `localhost`   
   port: `2222`    
   username: `vagrant`   
