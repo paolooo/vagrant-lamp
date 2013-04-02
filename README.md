@@ -1,11 +1,11 @@
 Vagrant LAMP
-
 ============
+
 by Nino Paolo Amarillento
 
 
-Installation
-------------
+### Installation
+
 - Download [Vagrant](http://downloads.vagrantup.com/)   
 - Download [Virtualbox](https://www.virtualbox.org/wiki/Downloads)    
 - Clone vagrant-lamp git repo   
@@ -35,13 +35,11 @@ Installation
   `$ npm --version`   
   
 
-Usage
------
+### Usage
 Navigate to `http://localhost:8082`
 
 
-Vagrant SSH 
------------
+### Vagrant SSH 
 Simply run `vagrant ssh`. If you're using windows, you need putty to access this.
 
 Here's the instructions for Windows users:
@@ -53,8 +51,7 @@ Here's the instructions for Windows users:
 * password: `vagrant`
 
 
-Vagrant Commands
-----------------
+### Vagrant Commands
 * `vagrant up`
 * `vagrant reload`
 * `vagrant halt`
@@ -63,8 +60,11 @@ Vagrant Commands
 * `vagrant status`
 
 
-Credit
-------
+
+### Bash Scripts
+  * Laravel 4 (https://gist.github.com/paolooo/5292362) - This will download laravel 4 automatically for you
+
+### Credit
 * [VagrantUp](http://vagrantup.com/)
 * [VirtualBox](http://virtualbox.com)
 * [PuppetLabs](https://github.com/puppetlabs)
