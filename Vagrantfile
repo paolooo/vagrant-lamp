@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "base"
+  # config.vm.box = "base"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
@@ -115,4 +115,33 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # chef-validator, unless you changed the configuration.
   #
   #   chef.validation_client_name = "ORGNAME-validator"
+  
+  config.vm.define "cp533" do |cp533|
+    cp533.vm.box = "centos5.9x64"
+    cp533.vm.box_url = "http://tag1consulting.com/files/centos-5.9-x86-64-minimal.box"
+    cp533.vm.network :forwarded_port, guest: 80, host: 8082
+    cp533.vm.network :private_network, ip: "192.168.33.10"
+    # cp533.vm.network :public_network
+    # cp533.ssh.forward_agent = true
+    cp533.vm.synced_folder "./data", "/vagrant/data", :mount_options => ['dmode=777', 'fmode=777'] 
+    cp533.vm.synced_folder "./www", "/vagrant/www", :mount_options => ['dmode=777', 'fmode=777'] 
+
+    cp533.vm.provision :shell, :path => "shell/init.sh"
+
+    cp533.vm.provision :puppet do |puppet|
+      puppet.facter = {
+        "fqdn"      => "localhost",
+        "docroot"   => "/vagrant/www",
+        "host"      => 'localhost',  # db host
+        "username"  => 'paolo',      # db username
+        "password"  => '123',        # db password
+        "db_name"   => "development", # db name
+        "db_location" => "/vagrant/data/db.sql"
+      }
+      puppet.manifests_path = "puppet/manifests"
+      puppet.module_path = ["puppet/modules", "extras/modules"]
+      puppet.manifest_file  = "init.pp"
+    end
+  end
+
 end
