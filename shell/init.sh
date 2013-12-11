@@ -2,7 +2,7 @@
 
 echo "Hello!, Let's start"
 
-echo "Yum cleaners..."
+echo "[CentOS] Yum cleaners..."
 yum clean headers
 yum clean packages
 yum clean metadata
