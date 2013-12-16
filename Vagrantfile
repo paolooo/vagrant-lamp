@@ -130,7 +130,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cp533.vm.provision :puppet do |puppet|
       puppet.facter = {
-        "fqdn"      => "localhost",
+        # "fqdn"      => "localhost",
+        "domain"    => "localhost",
         "docroot"   => "/vagrant/www",
         "host"      => 'localhost',  # db host
         "username"  => 'paolo',      # db username
