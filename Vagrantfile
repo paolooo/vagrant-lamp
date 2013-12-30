@@ -36,6 +36,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  # php 5.3.10
+  # apache 2.2.22
   config.vm.define "u64" do |u64|
     u64.vm.box = "ubuntu-precise-64"
     u64.vm.box_url = "http://files.vagrantup.com/precise64.box"
@@ -60,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "db_name"   => "development", # db name
         "db_location" => "/vagrant/data/db.sql"
       }
-      puppet.manifests_path = "puppet/manifests"
+      puppet.manifests_path = "extras/manifests"
       puppet.module_path = ["puppet/modules", "extras/modules"]
       puppet.manifest_file  = "u64.pp"
     end

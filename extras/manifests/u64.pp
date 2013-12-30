@@ -46,9 +46,22 @@ class myinit {
     }
     'ubuntu', 'debian': {
       # $osfamily = 'Debian'
+  
+      exec { "apt-get update": 
+        command => "apt-get -y update"
+      , timeout => 0
+      # , before => [ Stage["main"] ]
+      }
 
-      exec { 'apt-get update':
-        command => '/usr/bin/apt-get update --fix-missing',
+      exec { "apt-get upgrade":
+        command => "apt-get -y upgrade"  
+      , timeout => 0 # disable timeout
+      , require => [ Exec["apt-get update"] ]
+      }
+
+      package { "python-software-properties":
+        ensure => present
+      , require => [ Exec["apt-get upgrade"] ]
       }
 
     }
@@ -71,8 +84,11 @@ class myapache {
   require myinit
   
   class { "apache":
-    default_mods  => false 
-    , default_confd_files => false
+    default_mods  => false
+  , default_confd_files => false
+  , mpm_module => "prefork"
+  , service_name => "apache2"
+  , service_enable => false
   }
   
   apache::vhost { $domain:
@@ -107,7 +123,7 @@ class myapache {
       'auth_basic'
     , 'auth_digest'
     , 'authn_file'
-    , 'authn_alias'
+    # , 'authn_alias'
     , 'authn_anon'
     , 'authn_dbm'
     , 'authn_default'
@@ -115,10 +131,10 @@ class myapache {
     , 'authz_owner'
     , 'authz_groupfile'
     , 'authz_dbm'
-    , 'authz_default'
+    # , 'authz_default'
     , 'ldap'
     , 'include'
-    , 'logio'
+    # , 'logio'
     , 'env'
     , 'ext_filter'
     , 'expires'
@@ -136,7 +152,7 @@ class myapache {
     , 'cgi'
     , 'dav'
     , 'dav_fs'
-    , 'deflate'
+      , 'deflate'
     , 'disk_cache'
     , 'headers'
     , 'info'
@@ -158,11 +174,13 @@ class myapache {
 
 class myphp {
   require myapache
+  # include php5
 
   class { "php":
-    # package => "php53"
-    # , module_prefix => "php53-"
-    # , service => "httpd"
+    package => "php5"
+    , module_prefix => "php5-"
+    , service => "apache2"
+    # , require => [ Class["php5"] ]
   }
 
   include apache::mod::php
@@ -170,16 +188,16 @@ class myphp {
   php::module {[
     'cli'
     , 'common'
-    , 'devel'
-    , 'xml'
+    # , 'devel'
+    # , 'xml'
     , 'gd'
-    , 'mbstring'
+    # , 'mbstring'
     , 'mcrypt'
     , 'mysql'
-    , 'soap'
-    , 'pdo'
+    # , 'soap'
+    # , 'pdo'
     , 'xmlrpc'
-    , 'bcmath'
+    # , 'bcmath'
     , 'snmp'
   ]:
   }
@@ -261,21 +279,21 @@ class myimagemagick {
 
   package { [
       "gcc"
-      , "ImageMagick"
-      , "ImageMagick-devel"
-      , "ImageMagick-perl"
+      , "imagemagick"
+      # , "imagemagick-common"
+      # , "imagemagick-doc"
     ]:
     ensure => installed
   }
 
   exec { "pecl install imagick":
-    require => [ Package["ImageMagick"] ]
+    require => [ Package["imagemagick"] ]
     , unless => "pecl list | grep imagick"
   }
   ->
-  exec { "echo extension=imagick.so >> /etc/php.ini":
+  exec { "echo extension=imagick.so >> /etc/php5/cli/php.ini":
     notify => [ Service["httpd"] ]
-    , unless => "grep imagick.so /etc/php.ini"
+    , unless => "grep imagick.so /etc/php5/cli/php.ini"
   }
 }
 
@@ -315,8 +333,8 @@ class mymisc {
 include myinit
 include myapache
 include myphp
-# include mypear
-# include myimagemagick
-# include mymysql
+include mypear
+include myimagemagick
+include mymysql
 # include mymisc
 
