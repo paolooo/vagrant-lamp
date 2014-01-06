@@ -46,7 +46,13 @@ class myinit {
     }
     'ubuntu', 'debian': {
       # $osfamily = 'Debian'
-  
+
+      class { "apt": }
+
+      package { "build-essential":
+        ensure => installed 
+      }
+      ->
       exec { "apt-get update": 
         command => "apt-get -y update"
       , timeout => 0
@@ -62,6 +68,15 @@ class myinit {
       package { "python-software-properties":
         ensure => present
       , require => [ Exec["apt-get upgrade"] ]
+      }
+
+
+      apt::ppa {
+        "ppa:ondrej/php5":
+        # "ppa:nathan-renniewaldock/+archive/ppa":
+        # "ppa:ondrej/+archive/php5":
+        # "ppa:zanfur/php5.5":
+      , require => [ Package ["python-software-properties"] ]
       }
 
     }
@@ -82,11 +97,11 @@ class myinit {
 
 class myapache {
   require myinit
-  
+
   class { "apache":
     default_mods  => false
   , default_confd_files => false
-  , mpm_module => "prefork"
+  # , mpm_module => "prefork"
   , service_name => "apache2"
   , service_enable => false
   }
@@ -118,63 +133,63 @@ class myapache {
     }
   }
 
-  apache::mod { [
-      # 'alias'
-      'auth_basic'
-    , 'auth_digest'
-    , 'authn_file'
-    # , 'authn_alias'
-    , 'authn_anon'
-    , 'authn_dbm'
-    , 'authn_default'
-    , 'authz_user'
-    , 'authz_owner'
-    , 'authz_groupfile'
-    , 'authz_dbm'
-    # , 'authz_default'
-    , 'ldap'
-    , 'include'
-    # , 'logio'
-    , 'env'
-    , 'ext_filter'
-    , 'expires'
-    , 'usertrack'
-    , 'actions'
-    , 'speling'
-    , 'substitute'
-    , 'proxy_balancer'
-    , 'proxy_ftp'
-    , 'proxy_connect'
-    , 'suexec'
-    , 'version'
-    , 'autoindex'
-    , 'cache'
-    , 'cgi'
-    , 'dav'
-    , 'dav_fs'
-      , 'deflate'
-    , 'disk_cache'
-    , 'headers'
-    , 'info'
-    # , 'mime'
-    , 'mime_magic'
-    , 'negotiation'
-    , 'proxy'
-    , 'proxy_ajp'
-    , 'proxy_http'
-    , 'rewrite'
-    , 'setenvif'
-    , 'status'
-    , 'userdir'
-    , 'vhost_alias'
-    ]:
-  }
+  # apache::mod { [
+  #     # 'alias'
+  #     'auth_basic'
+  #   , 'auth_digest'
+  #   , 'authn_file'
+  #   # , 'authn_alias'
+  #   , 'authn_anon'
+  #   , 'authn_dbm'
+  #   , 'authn_default'
+  #   , 'authz_user'
+  #   , 'authz_owner'
+  #   , 'authz_groupfile'
+  #   , 'authz_dbm'
+  #   # , 'authz_default'
+  #   , 'ldap'
+  #   , 'include'
+  #   # , 'logio'
+  #   , 'env'
+  #   , 'ext_filter'
+  #   , 'expires'
+  #   , 'usertrack'
+  #   , 'actions'
+  #   , 'speling'
+  #   , 'substitute'
+  #   , 'proxy_balancer'
+  #   , 'proxy_ftp'
+  #   , 'proxy_connect'
+  #   , 'suexec'
+  #   , 'version'
+  #   , 'autoindex'
+  #   , 'cache'
+  #   , 'cgi'
+  #   , 'dav'
+  #   , 'dav_fs'
+  #     , 'deflate'
+  #   , 'disk_cache'
+  #   , 'headers'
+  #   , 'info'
+  #   # , 'mime'
+  #   , 'mime_magic'
+  #   , 'negotiation'
+  #   , 'proxy'
+  #   , 'proxy_ajp'
+  #   , 'proxy_http'
+  #   , 'rewrite'
+  #   , 'setenvif'
+  #   , 'status'
+  #   , 'userdir'
+  #   , 'vhost_alias'
+  #   ]:
+  # }
 
 }
 
 class myphp {
   require myapache
-  # include php5
+  include php5
 
   class { "php":
     package => "php5"
@@ -282,12 +297,13 @@ class myimagemagick {
       , "imagemagick"
       # , "imagemagick-common"
       # , "imagemagick-doc"
+      , "libmagickwand-dev"
     ]:
     ensure => installed
   }
 
   exec { "pecl install imagick":
-    require => [ Package["imagemagick"] ]
+    require => [ Package["imagemagick", "libmagickwand-dev"] ]
     , unless => "pecl list | grep imagick"
   }
   ->
@@ -320,7 +336,7 @@ class mymysql {
 class mymisc {
   require myinit
 
-  package { ['vim-enhanced','curl','unzip','git']:
+  package { ['vim','curl','unzip','git']:
     ensure  => installed
   }
   
@@ -331,10 +347,9 @@ class mymisc {
 }
 
 include myinit
-include myapache
-include myphp
-include mypear
-include myimagemagick
-include mymysql
+# include myapache
+# include myphp
+# include mypear
+# include myimagemagick
+# include mymysql
 # include mymisc
-
