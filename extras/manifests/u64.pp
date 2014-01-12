@@ -53,6 +53,9 @@ class myinit {
         ensure => installed 
       }
       ->
+      exec { "dpkg --configure -a":
+      }
+      ->
       exec { "apt-get update": 
         command => "apt-get -y update"
       , timeout => 0
@@ -60,7 +63,7 @@ class myinit {
       }
 
       exec { "apt-get upgrade":
-        command => "apt-get -y upgrade"  
+        command => "apt-get -y upgrade"
       , timeout => 0 # disable timeout
       , require => [ Exec["apt-get update"] ]
       }
@@ -69,14 +72,18 @@ class myinit {
         ensure => present
       , require => [ Exec["apt-get upgrade"] ]
       }
-
-
+ 
       apt::ppa {
         "ppa:ondrej/php5":
         # "ppa:nathan-renniewaldock/+archive/ppa":
         # "ppa:ondrej/+archive/php5":
         # "ppa:zanfur/php5.5":
       , require => [ Package ["python-software-properties"] ]
+      }
+
+      apt::ppa {
+        "ppa:ondrej/apache2":
+      , require => [ Package["python-software-properties"] ]
       }
 
     }
@@ -101,87 +108,88 @@ class myapache {
   class { "apache":
     default_mods  => false
   , default_confd_files => false
-  # , mpm_module => "prefork"
+  , mpm_module => "prefork"
   , service_name => "apache2"
   , service_enable => false
-  }
-  
-  apache::vhost { $domain:
-    priority  => "20"
-    , port => "80"
-    , docroot => $docroot
-    , logroot => $docroot # access_log and error_log
-    , serveraliases => [$aliases]
-    , directories => [{
-      path => $docroot
-      , allow_override => ["all"]
-      , options => ["Indexes", "FollowSymLinks", "MultiViews"]
-    }]
+  , purge_configs => false
   }
 
-  if $domain != "localhost" {
-    apache::vhost { "localhost":
-      priority  => "20"
-      , port => "80"
-        , docroot => "/vagrant/www"
-      , logroot => "/vagrant/www" # access_log and error_log
-      , directories => [{
-        path => "/vagrant/www"
-        , allow_override => ["all"]
-        , options => ["Indexes", "FollowSymLinks", "MultiViews"]
-      }]
-    }
-  }
+  # apache::vhost { $domain:
+  #   priority  => "20"
+  #   , port => "80"
+  #   , docroot => $docroot
+  #   , logroot => $docroot # access_log and error_log
+  #   , serveraliases => [$aliases]
+  #   , directories => [{
+  #     path => $docroot
+  #     , allow_override => ["all"]
+  #     , options => ["Indexes", "FollowSymLinks", "MultiViews"]
+  #   }]
+  # }
+
+  # if $domain != "localhost" {
+  #   apache::vhost { "localhost":
+  #     priority  => "20"
+  #     , port => "80"
+  #       , docroot => "/vagrant/www"
+  #     , logroot => "/vagrant/www" # access_log and error_log
+  #     , directories => [{
+  #       path => "/vagrant/www"
+  #       , allow_override => ["all"]
+  #       , options => ["Indexes", "FollowSymLinks", "MultiViews"]
+  #     }]
+  #   }
+  # }
 
   # apache::mod { [
-  #     # 'alias'
-  #     'auth_basic'
-  #   , 'auth_digest'
-  #   , 'authn_file'
-  #   # , 'authn_alias'
-  #   , 'authn_anon'
-  #   , 'authn_dbm'
-  #   , 'authn_default'
-  #   , 'authz_user'
-  #   , 'authz_owner'
-  #   , 'authz_groupfile'
-  #   , 'authz_dbm'
-  #   # , 'authz_default'
-  #   , 'ldap'
-  #   , 'include'
-  #   # , 'logio'
-  #   , 'env'
-  #   , 'ext_filter'
-  #   , 'expires'
-  #   , 'usertrack'
-  #   , 'actions'
-  #   , 'speling'
-  #   , 'substitute'
-  #   , 'proxy_balancer'
-  #   , 'proxy_ftp'
-  #   , 'proxy_connect'
-  #   , 'suexec'
-  #   , 'version'
-  #   , 'autoindex'
-  #   , 'cache'
-  #   , 'cgi'
-  #   , 'dav'
-  #   , 'dav_fs'
-  #     , 'deflate'
-  #   , 'disk_cache'
-  #   , 'headers'
-  #   , 'info'
-  #   # , 'mime'
-  #   , 'mime_magic'
-  #   , 'negotiation'
-  #   , 'proxy'
-  #   , 'proxy_ajp'
-  #   , 'proxy_http'
-  #   , 'rewrite'
-  #   , 'setenvif'
-  #   , 'status'
-  #   , 'userdir'
-  #   , 'vhost_alias'
+  #   # 'alias'
+  #   # 'auth_basic'
+  #   'auth_digest'
+  # # , 'authn_file'
+  # # , 'authn_alias'
+  # , 'authn_anon'
+  # , 'authn_dbm'
+  # # , 'authn_default'
+  # # , 'authz_user'
+  # , 'authz_owner'
+  # # , 'authz_groupfile'
+  # , 'authz_dbm'
+  # # , 'authz_default'
+  # , 'ldap'
+  # , 'include'
+  # , 'logio'
+  # # , 'env'
+  # , 'ext_filter'
+  # , 'expires'
+  # , 'usertrack'
+  # , 'actions'
+  # , 'speling'
+  # , 'substitute'
+  # , 'proxy_balancer'
+  # , 'proxy_ftp'
+  # , 'proxy_connect'
+  # , 'suexec'
+  # , 'version'
+  # # , 'autoindex'
+  # , 'cache'
+  # # , 'cgi'
+  # # , 'dav'
+  # # , 'dav_fs'
+  # # , 'deflate'
+  # # , 'disk_cache'
+  # , 'headers'
+  # , 'info'
+  # # , 'mime'
+  # , 'mime_magic'
+  # # , 'negotiation'
+  # , 'proxy'
+  # , 'proxy_ajp'
+  # , 'proxy_http'
+  # , 'rewrite'
+  # # , 'setenvif'
+  # , 'status'
+  # , 'userdir'
+  # , 'vhost_alias'
   #   ]:
   # }
 
@@ -198,12 +206,12 @@ class myphp {
     # , require => [ Class["php5"] ]
   }
 
-  include apache::mod::php
+  # include apache::mod::php
 
   php::module {[
     'cli'
     , 'common'
-    # , 'devel'
+    , 'dev'
     # , 'xml'
     , 'gd'
     # , 'mbstring'
@@ -314,12 +322,14 @@ class myimagemagick {
 }
 
 class mymysql {
+  require myinit
   require myphp
 
   class { '::mysql::server':
-    root_password    => $password
-    , remove_default_accounts => true
-    , override_options => { 'mysqld' => { 'max_connections' => '1024' } }
+    root_password  => $password
+  , remove_default_accounts => true
+  , override_options => { 'mysqld' => { 'max_connections' => '1024' } }
+  , require => [ Package['python-software-properties']]
   }
 
   mysql::db { $db_name:
@@ -339,7 +349,7 @@ class mymisc {
   package { ['vim','curl','unzip','git']:
     ensure  => installed
   }
-  
+
   include composer
   include phpmyadmin
   include nodejs
@@ -347,9 +357,9 @@ class mymisc {
 }
 
 include myinit
-# include myapache
-# include myphp
-# include mypear
-# include myimagemagick
-# include mymysql
-# include mymisc
+include myapache
+include myphp
+include mypear
+include myimagemagick
+include mymysql
+include mymisc

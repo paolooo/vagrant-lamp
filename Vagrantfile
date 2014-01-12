@@ -6,6 +6,20 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  # we will try to autodetect this path.
+  # However, if we cannot or you have a special one you may pass it like:
+  # config.vbguest.iso_path = "#{ENV['HOME']}/Downloads/VBoxGuestAdditions.iso"
+  config.vbguest.iso_path = "/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso"
+  # or
+  # config.vbguest.iso_path = "http://company.server/VirtualBox/%{version}/VBoxGuestAdditions.iso"
+
+  # set auto_update to false, if you do NOT want to check the correct 
+  # additions version when booting this machine
+  config.vbguest.auto_update = false
+
+  # do NOT download the iso file from a webserver
+  config.vbguest.no_remote = true
+
   config.vm.define "cp533" do |cp533|
     cp533.vm.box = "centos5.9x64"
     cp533.vm.box_url = "http://tag1consulting.com/files/centos-5.9-x86-64-minimal.box"
@@ -48,18 +62,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     u64.vm.synced_folder "./data", "/vagrant/data", :mount_options => ['dmode=777', 'fmode=777'] 
     u64.vm.synced_folder "./www", "/vagrant/www", :mount_options => ['dmode=777', 'fmode=777'] 
 
-    # u64.vm.provision :shell, :path => "shell/init.sh"
+    # u64.vm.provision :shell, :path => "shell/u64.sh"
 
     u64.vm.provision :puppet do |puppet|
       puppet.facter = {
         # "fqdn"      => "localhost",
-        "domain"    => "localhost",
-        "aliases"   => "",
-        "docroot"   => "/vagrant/www",
+        "domain"    => "buhaton.lcl",
+        "aliases"   => "www.buhatong.lcl",
+        "docroot"   => "/vagrant/www/buhaton.com",
         "host"      => 'localhost',  # db host
-        "username"  => 'paolo',      # db username
+        "username"  => 'paolo_buhaton',      # db username
         "password"  => '123',        # db password
-        "db_name"   => "development", # db name
+        "db_name"   => "buhaton", # db name
         "db_location" => "/vagrant/data/db.sql"
       }
       puppet.manifests_path = "extras/manifests"
@@ -67,6 +81,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       puppet.manifest_file  = "u64.pp"
     end
   end
-
 
 end
