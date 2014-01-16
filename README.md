@@ -3,9 +3,6 @@ Vagrant LAMP
 
 by Nino Paolo Amarillento
 
-# wee
-#
-
 ### Installation
 
 - Download [Vagrant](http://downloads.vagrantup.com/)   
