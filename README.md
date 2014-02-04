@@ -34,6 +34,10 @@ by Nino Paolo Amarillento
   `$ npm --version`   
   
 
+### To fix the error
+$ sudo apt-get purge apache2
+$ sudo apt-get install apache2-mpm-prefork
+
 ### Usage
 Navigate to `http://localhost:8082`
 
