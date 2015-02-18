@@ -35,10 +35,14 @@ by Nino Paolo Amarillento
   
 
 ### To fix the error
+
+```
 $ sudo apt-get purge apache2
 $ sudo apt-get install apache2-mpm-prefork
+```
 
 ### Usage
+
 Navigate to `http://localhost:8082`
 
 
@@ -61,8 +65,6 @@ Here's the instructions for Windows users:
 * `vagrant destroy`
 * `vagrant ssh`
 * `vagrant status`
-
-
 
 ### Bash Scripts
   * Laravel 4 (https://gist.github.com/paolooo/5292362) - This will download laravel 4 automatically for you
