@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = 'puphpet/centos65-x64'
 
   config.vm.network :forwarded_port, guest: 80, host: 8082
-  config.vm.network :private_network, ip: '192.168.56.107'
+  config.vm.network :private_network, ip: '192.168.56.106'
   config.vm.synced_folder './', '/var/www', :mount_options => ['dmode=755', 'fmode=0664'] 
 
   config.vm.provision :shell, :path => 'shell/init.sh'
